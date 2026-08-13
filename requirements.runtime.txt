@@ -1,0 +1,6 @@
+fastapi>=0.100
+sse-starlette>=2.0
+uvicorn[standard]>=0.24
+pywebview>=5.0
+python-multipart>=0.0.5
+pydantic>=2.0
