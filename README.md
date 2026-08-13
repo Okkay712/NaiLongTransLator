@@ -1,73 +1,73 @@
-# 奶龙翻译器 漫画图片自动翻译器
+# 奶龙翻译器 · 漫画图片自动翻译器
 
-一个本地批量图片翻译工具。选择包含 jpg/png/webp 的文件夹，自动识别日文文本、翻译成简体中文、擦掉原文、把中文嵌回原来的对白区域，最后输出一个新文件夹。
+一个本地批量图片翻译工具：选择包含 jpg/png/webp/bmp 的文件夹，自动完成 **文字检测 → OCR → 擦除 → 翻译 → 嵌字**，把图片翻译成目标语言，输出到新文件夹。
 
-提供两种使用方式：
-- **新：** Web 风格桌面程序（FastAPI + PyWebView），实时日志 + 进度 + 原图/译图并排预览。
-- **旧（仍可用）：** Tkinter 极简 GUI + 命令行。
+界面是 Web 风格桌面程序（FastAPI + PyWebView），带启动画面、实时日志、进度条、原图/译图并排预览。
+
+> 还保留旧版 Tkinter 极简 GUI（`app.py`，配合 `拖文件夹到这里翻译.bat` 可拖拽文件夹/zip 使用）。
 
 ---
 
-## 第一次使用（Web 风格，推荐）
+## 功能特性
 
-### 方式 A：开发模式（直接跑源码）
+- 原图/译图实时预览：翻译过程中左右并排，每完成一张自动切换下一张
+- 批量翻译：一次添加多个文件夹，串行执行，统一输出到配置目录；队列页实时显示每个任务状态
+- 任务可取消：任务页和批量队列页都能随时取消（排队中直接取消，进行中终止子进程）
+- 自定义输出位置：两种模式——与输入同目录（`<输入>_CN`），或统一输出到指定目录（默认 `~/Trans_Output`）
+- 实时进度：每张图的进度条 + 日志滚动，失败/完成自动展开日志方便排查
+- 主页顶部"正在进行的任务"栏目：随时看到队列状态，一键回到任务页
+- 最近使用记录：主页显示历史文件夹，点击直接开始
+- 完成弹窗提示输出路径，一键打开输出目录
+
+---
+
+## 快速开始
+
+### 方式 A：源码运行
 
 ```bash
-# 在项目根目录下：
-python -m venv .venv          # 如果还没有
-.venv\Scripts\python.exe -m pip install -r requirements.runtime.txt
-.venv\Scripts\python.exe install_deps.py
-# 上述会拉漫画翻译引擎和它的依赖，约几分钟。
+# 项目根目录下，一条命令完成：创建 .venv + 装运行依赖 + 从 GitHub 下载漫画翻译引擎并装依赖（约几分钟）
+py -3 install_deps.py
+# 启动
 .venv\Scripts\python.exe run.py
 ```
 
-会弹出标题为「奶龙翻译器」的窗口，第一次启动会引导你填 API Key，并自动安装翻译引擎。
+弹出「奶龙翻译器」窗口后，第一次启动会引导你填 API Key 并安装翻译引擎。
 
-### 方式 B：双击 `启动翻译器.bat`
+### 方式 B：一键脚本
 
-保持你熟悉的入口。脚本会调 `run.py`。
+双击 `安装依赖.bat` 完成环境准备（等价于上面的 `install_deps.py`），之后双击 `启动翻译器.bat` 启动，也可以使用奶龙翻译器.exe启动。
 
-### 方式 C：分发版本（打包后）
-
-`dist/Trans/Trans.exe` 已通过 `dev.spec` 打包验证。分发时把 `dist/Trans/` 整个目录打成 zip 发布即可。
+### 方式 C：打包产物（分发用）
 
 ```bash
-.venv\Scripts\python.exe -m PyInstaller -y dev.spec
-# 产物：dist\Trans\Trans.exe（含 _internal/）
+.venv\Scripts\python.exe -m PyInstaller -y dev_onefile.spec
+# 产物：dist\Trans.exe（单文件，frontend/ 已内嵌）
 ```
 
-> 注意：首次运行 EXE 时，应用内的「安装引擎」流程会通过 pip 拉漫画翻译引擎。PyInstaller 默认没有把 pip 打进包（pip 太重），打包分发需要把 pip 也带进来或用户本机已装好 Python（当前我们走的是前者）。详见 `docs/plans/2026-08-12-trans-translator-frontend-impl.md` 第 4 阶段的 Task 4.x。
+分发时发布 `dist\Trans.exe` 即可（发布版建议改名如 `奶龙翻译器.exe`）。
+
+> 注意：EXE 不包含翻译引擎和模型（约 5GB）。首次运行点主页「去安装」，应用会从 GitHub 下载引擎源码并安装依赖。需要网络能访问 GitHub。
 
 ---
 
-## 平时使用
+## 使用流程
 
-1. 双击 `Trans.exe`（或 `启动翻译器.bat`）
-2. 主页点「选择文件夹开始翻译」 → 选图片文件夹 → 跳转任务页
-3. 点「开始翻译」 → 看实时日志滚动 + 进度条
-4. 完成后右下角出现输出目录路径
-
-翻译输出放在输入文件夹旁边，名字形如 `原文件夹名_CN`。
-
----
-
-## 旧 GUI（兼容）
-
-```bash
-.venv\Scripts\python.exe app.py
-```
-
-会开 Tkinter 选文件夹对话框。命令行模式：
-
-```bash
-.venv\Scripts\python.exe app.py "D:\你的图片文件夹"
-```
+1. 打开「奶龙翻译器」（EXE 或 `启动翻译器.bat`）
+2. 主页点 **「翻译一个文件夹」** 选择图片文件夹 → 进入任务页
+3. 任务页左侧立即显示第一张原图
+4. 点 **「开始翻译」**：
+   - 每完成一张：右侧显示该张译图，左侧自动切到下一张原图
+   - 顶部进度条 + 每张计数实时更新
+   - 中途想停：点 **「取消」**
+5. 全部完成后弹窗提示输出路径，可点 **「打开输出目录」** 直接查看
+6. 想批量：主页展开 **「批量翻译多个文件夹」**，添加多个文件夹后点「开始批量」；队列详情页可看每个任务的状态、取消或打开输出目录
 
 ---
 
 ## 配置
 
-Web 风格前端把配置存在用户目录下：`C:\Users\<你>\.trans\config.json`。
+新版 Web 界面的配置存在用户目录下：`C:\Users\<你>\.trans\config.json`（首次运行时自动创建，不会进入项目目录）。
 
 ```json
 {
@@ -84,49 +84,58 @@ Web 风格前端把配置存在用户目录下：`C:\Users\<你>\.trans\config.j
 }
 ```
 
-- `api_key`：每次只在「设置」页里填，前端读到的总是 `***`，落盘存真值。
-- `output_mode`：`input`（与输入文件夹同目录，输出 `<输入>_CN`）/ `custom`（统一放 `output_dir`）
-- `output_dir`：自定义输出目录；留空时回退到 `~/Trans_Output`。
-- 想换翻译器：改 `translator` 字段（`youdao` / `baidu` / `deepl` / `chatgpt` / `none`）。
-- 翻译器之外的引擎参数（detector/ocr/inpainter）可在前端「设置」→ 展开「高级选项」修改。
+- **api_key**：只在「设置」页填写；接口读取时永远显示 `***`，真实值只落盘在用户目录的 config.json
+- **target_lang**：CHS（简体中文）/ CHT（繁体）/ ENG / KOR
+- **translator**：默认 `deepseek`（需在设置页填 DeepSeek API Key，可在 platform.deepseek.com 申请）；也可改 `youdao` / `baidu` / `deepl` / `chatgpt` / `none`（none = 只识别原文，不翻译）。注意：应用内目前只支持配置 DeepSeek 的 API Key，其余翻译器选项会直接透传给引擎，按引擎默认行为工作
+- **output_mode**：`custom`（默认，统一输出到 `output_dir`，留空则为 `~/Trans_Output`）/ `input`（与输入文件夹同目录，输出 `<输入>_CN`）
+- **高级选项**（detector / ocr / inpainter）：在「设置」页展开「高级选项」修改
 
-## 批量翻译
+设置页可通过主页 / 任务页 / 批量页右上角 ⚙ 进入；左上角「←」返回原页面。
 
-主页下方"批量翻译多个文件夹"展开：
-- 点 **"添加一个文件夹"** 多次，累加到批次列表
-- 列表里每个都可单独移除
-- 点 **"开始批量"**：依次翻译，结果统一进配置好的输出目录
-- 翻译过程中主页会显示实时队列状态，可点 **"查看队列详情"** → 批量页
+> 旧版 CLI（`app.py` / 拖文件夹 bat）使用**项目根目录**的 `config.json`，配置项不同（含 `zip_result`），与新 Web 界面互不影响。
 
-并行只跑一个，保证显存/内存不爆。批量启动后任何环节点"取消当前"只停当前任务，后面继续。
+---
 
 ## 翻译方式
 
-默认用上游的 `manga-image-translator` 引擎做文字检测 → OCR → 擦除 → 翻译 → 嵌字。目标语言简体中文。
+默认使用开源引擎 [manga-image-translator](https://github.com/zyddnys/manga-image-translator)（文字检测 → OCR → 擦除 → 翻译 → 嵌字），翻译部分默认走 DeepSeek 大模型，中文质量好、便宜。
+
+---
 
 ## 常见问题
 
-- **第一次运行慢**：正常，模型会下载到 `models/`。
-- **翻译失败**：多数是网络翻译接口或模型下载失败；等几分钟重新翻译即可。
-- **只想识别原文**：`translator` 设为 `none`。
-- **打包后找不到前端**：打包后 PyInstaller 把 `frontend/` 放在 `_internal/frontend/`，前端代码已经处理好。
+- **第一次运行慢**：正常，引擎模型会下载到 `models/`（引擎和模型都放项目目录，不进 git）。
+- **翻译失败**：多为网络问题（DeepSeek 接口或模型下载）。看日志里 `[奶龙翻译器] 子进程退出，共 N 行日志，rc=X`，rc 非 0 就是失败了。
+- **只想识别原文不翻译**：`translator` 设为 `none`。
+- **没有显示译图预览**：确认日志里有 `Saving "..."` 行（引擎保存图片时会打印）；预览依赖这行日志触发。
+- **打包后找不到前端**：打包时 `frontend/` 已内嵌进 EXE（单文件模式运行时自动解包，单目录模式在 `_internal/frontend/`），代码已处理。
 
-## 架构和测试
+---
+
+## 架构与测试
 
 ```
 项目根目录\
 ├── translator/    # FastAPI 后端
-│   ├── api.py
-│   ├── service.py       # 翻译任务调度（subprocess + asyncio.Queue）
-│   ├── installer.py     # 引擎安装
-│   ├── config.py        # ~/.trans/config.json 读写（含 api_key 脱敏）
-│   ├── settings.py      # 端口和默认值
-│   └── paths.py
-├── frontend/      # 原生 HTML/CSS/JS（不引入 npm）
-├── tests/         # pytest
-├── docs/plans/    # 设计稿 + 实施计划
-├── run.py         # 启动入口（uvicorn + PyWebView）
-├── dev.spec       # PyInstaller 单目录 spec
+│   ├── api.py         # 路由（翻译 / 取消 / 队列 / 预览 / 安装 / SSE 流）
+│   ├── service.py     # 任务调度（subprocess + asyncio.Queue 串行队列，支持取消）
+│   ├── installer.py   # 引擎安装（下载 GitHub 源码 + 装依赖 + import 验证）
+│   ├── config.py      # ~/.trans/config.json 读写（api_key 脱敏）
+│   ├── settings.py    # 端口、默认配置
+│   └── paths.py       # 开发 / 打包路径解析
+├── frontend/      # 原生 HTML/CSS/JS（无 npm 依赖）
+│   ├── index.html     # 主页（选文件夹 / 批量 / 正在进行的任务 / 最近使用）
+│   ├── task.html      # 翻译任务页（进度 + 原图/译图预览 + 取消）
+│   ├── batch.html     # 批量队列页
+│   ├── settings.html  # 设置页
+│   ├── install.html   # 引擎安装页
+│   ├── css/           # 主题与通用样式
+│   └── js/            # 各页面逻辑
+├── tests/         # pytest（config / service / api / installer）
+├── run.py         # 启动入口（uvicorn + PyWebView，带 splash 启动画面）
+├── install_deps.py    # 引擎 + 依赖一键安装（等价于 安装依赖.bat）
+├── dev.spec           # PyInstaller 单目录 spec
+├── dev_onefile.spec   # PyInstaller 单文件 spec（推荐分发）
 └── requirements.runtime.txt
 ```
 
@@ -136,6 +145,8 @@ Web 风格前端把配置存在用户目录下：`C:\Users\<你>\.trans\config.j
 .venv\Scripts\python.exe -m pytest tests/ -v
 ```
 
+---
+
 ## License
 
-MIT
+[MIT](LICENSE)
