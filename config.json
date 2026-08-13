@@ -1,0 +1,11 @@
+{
+  "target_lang": "CHS",
+  "translator": "deepseek",
+  "detector": "default",
+  "ocr": "48px",
+  "inpainter": "default",
+  "font": "C:\\Windows\\Fonts\\simhei.ttf",
+  "save_quality": 100,
+  "zip_result": true
+}
+
