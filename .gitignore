@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# 用户本地配置（含 API Key 等敏感信息，绝不进仓库）
+.env
+.env.*
+*.local.json
+
+# 体积大的运行产物
+models/
+work/
+build/
+dist/
+.pytest_cache/
+
+# 第三方引擎（约 5GB，用户按 README 自行下载）
+engine/
+
+# 打包产物二进制
+*.exe
+
+# PyInstaller / 打包过程
+*.spec.bak
+
+# 编译产物（EXE 体积大，发布走 GitHub Releases）
+*.exe
+
+# 第三方翻译引擎（体积巨大，用户自行下载解压后放 engine/）
+engine/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# 引擎源码（如被解包到 engine/ 下）
+# 注意：manga-image-translator 是 MPL-2.0，可发布但体积大。
+# 如果想省空间：取消下行注释
+# engine/manga-image-translator-main/
+
+# 临时
+*.tmp
+*.log
+nul
