@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>奶龙翻译器</title>
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <style>
+    .output-mode { display: flex; gap: 16px; margin-bottom: 8px; }
+    .output-mode label { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+    .output-mode input[type="radio"] { width: auto; margin: 0; }
+    .path-row { display: flex; gap: 8px; align-items: center; }
+    .path-row input { flex: 1; }
+    .path-row button { white-space: nowrap; }
+    .batch-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+    .batch-buttons > button { flex: 1; min-width: 180px; }
+    .batch-list { margin-top: 16px; }
+    .batch-list .item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 12px; border: 1px solid var(--border);
+      border-radius: 6px; margin-bottom: 6px; font-size: 13px;
+    }
+    .batch-list .item button { background: transparent; border: 0; cursor: pointer; color: var(--danger); font-size: 16px; }
+    .status-pill {
+      display: inline-block; padding: 2px 8px; border-radius: 12px;
+      font-size: 11px; background: var(--border); margin-left: 6px;
+    }
+    .status-running { background: var(--primary); color: var(--primary-fg); }
+    .status-done    { background: #44a16a; color: #fff; }
+    .status-failed  { background: var(--danger); color: #fff; }
+    .status-queued  { background: var(--border); color: var(--muted); }
+    .run-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border: 1px solid var(--border);
+      border-radius: 6px; margin-bottom: 6px; font-size: 13px;
+    }
+    .run-row .run-folder {
+      flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .run-row .run-progress { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .run-row a, .run-row button {
+      font-size: 12px; padding: 3px 10px; border-radius: 4px;
+      border: 1px solid var(--border); background: transparent;
+      cursor: pointer; color: var(--text); text-decoration: none; white-space: nowrap;
+    }
+    .run-row a:hover { background: var(--border); }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <h1>奶龙翻译器</h1>
+    <a id="open-settings" href="/settings.html?from=home" class="icon-btn" aria-label="设置">⚙</a>
+  </header>
+
+  <main class="app-main">
+    <section id="loading-card" class="card">
+      <p class="muted">正在加载…</p>
+    </section>
+
+    <section id="home-card" class="card">
+      <!-- 正在进行的任务：置顶显示，有任务时才出现 -->
+      <div id="running-wrap"
+           style="display:none; margin-bottom: 18px; border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="font-size:14px;">正在进行的任务</strong>
+          <a href="/batch.html" style="font-size:12px; color:var(--primary); text-decoration:none;">队列详情 →</a>
+        </div>
+        <div id="running-list"></div>
+      </div>
+
+      <h2>选择图片文件夹</h2>
+      <p class="muted" id="engine-hint"></p>
+
+      <div class="batch-buttons" style="margin-bottom: 12px;">
+        <button id="pick-folder" class="primary big">翻译一个文件夹</button>
+      </div>
+
+      <details>
+        <summary style="cursor: pointer; font-size: 14px; margin-bottom: 8px;">
+          批量翻译多个文件夹（依次串行，结果都进配置的输出目录）
+        </summary>
+        <div class="batch-buttons" style="margin-top: 8px;">
+          <button id="batch-add" class="primary">+ 添加一个文件夹到批次</button>
+          <button id="batch-start" class="primary" disabled>开始批量</button>
+          <button id="batch-clear" class="primary" style="background: var(--danger);" disabled>清空</button>
+        </div>
+        <div id="batch-list" class="batch-list"></div>
+      </details>
+
+      <div id="recent-wrap" class="muted" style="margin-top: 22px;">
+        <p style="margin-top: 0;">最近使用（点击直接开始）</p>
+        <div id="recent-chips" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

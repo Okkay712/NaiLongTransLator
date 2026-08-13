@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>奶龙翻译器 · 设置</title>
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <style>
+    .output-mode { display: flex; gap: 16px; margin-bottom: 8px; }
+    .output-mode label { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+    .output-mode input[type="radio"] { width: auto; margin: 0; }
+    .path-row { display: flex; gap: 8px; align-items: center; }
+    .path-row input { flex: 1; }
+    .path-row button { white-space: nowrap; }
+    .app-header h1 { flex: 1; text-align: center; }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <a id="settings-back" href="/" class="icon-btn" aria-label="返回">←</a>
+    <h1>设置</h1>
+    <span class="icon-btn" style="visibility:hidden;">⚙</span>
+  </header>
+
+  <main class="app-main">
+    <section class="card">
+      <p class="muted">填好下面这些项就可以开始翻译。设置只保存在本机的用户目录里。</p>
+
+      <label>API Key
+        <input id="api_key" type="password" autocomplete="off" placeholder="例如 sk-..." />
+      </label>
+
+      <label>目标语言
+        <select id="target_lang">
+          <option value="CHS">简体中文</option>
+          <option value="CHT">繁体中文</option>
+          <option value="ENG">英文</option>
+          <option value="KOR">韩文</option>
+        </select>
+      </label>
+
+      <fieldset style="border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 14px;">
+        <legend style="font-size: 13px; padding: 0 6px;">翻译结果输出位置</legend>
+        <div class="output-mode">
+          <label>
+            <input type="radio" name="output_mode" value="input" />
+            与输入文件夹同目录（默认 <code style="font-size:12px;">&lt;输入&gt;_CN</code>）
+          </label>
+        </div>
+        <div class="output-mode">
+          <label>
+            <input type="radio" name="output_mode" value="custom" checked />
+            自定义输出目录
+          </label>
+        </div>
+        <div id="output_dir_wrap" style="margin-top: 6px;">
+          <div class="path-row">
+            <input id="output_dir" type="text" placeholder="留空则使用默认路径" />
+            <button type="button" onclick="Settings.pickOutputDir()">选择…</button>
+          </div>
+          <p class="muted" style="margin: 6px 0 0;">默认：<code id="output_dir_default">~/Trans_Output</code></p>
+        </div>
+      </fieldset>
+
+      <label>字体路径
+        <input id="font" type="text" />
+      </label>
+      <label>保存质量 (1-100)
+        <input id="save_quality" type="number" min="1" max="100" />
+      </label>
+
+      <details id="advanced">
+        <summary>高级选项</summary>
+        <label>检测器 <input id="detector" type="text" /></label>
+        <label>OCR <input id="ocr" type="text" /></label>
+        <label>擦字器 <input id="inpainter" type="text" /></label>
+      </details>
+
+      <div class="actions">
+        <button id="save-settings" class="primary">保存</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/settings.js"></script>
+</body>
+</html>

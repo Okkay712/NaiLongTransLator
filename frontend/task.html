@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>奶龙翻译器 · 翻译任务</title>
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <style>
+    /* 主视觉：进度条 + 预览图占大头，日志折叠在底部 */
+    .stage-bar { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .stage-bar .pill { padding:3px 10px; border-radius:12px;
+      background:var(--primary); color:#fff; font-size:12px; }
+    .stage-bar .pill.done { background:#22a06b; }
+    .stage-bar .pill.failed { background:#d83b3b; }
+    .stage-bar .pill.idle { background:#888; }
+    .stage-bar .meta { color:var(--muted); font-size:13px; }
+
+    .progress-track { background:var(--border); border-radius:6px; height:8px;
+      overflow:hidden; margin-bottom:6px; }
+    .progress-track > div { background:linear-gradient(90deg,var(--primary),#7a8aff);
+      height:100%; transition:width .3s; }
+    .progress-text { font-size:12px; color:var(--muted); margin-bottom:18px;
+      display:flex; justify-content:space-between; }
+
+    .preview { display:grid; grid-template-columns:1fr 1fr; gap:12px;
+      min-height:340px; }
+    .preview .frame { background:var(--bg-alt, #fafbfc); border:1px solid var(--border);
+      border-radius:8px; display:flex; align-items:center; justify-content:center;
+      overflow:hidden; min-height:340px; position:relative; }
+    .preview .frame .lbl { position:absolute; top:8px; left:10px;
+      font-size:11px; color:var(--muted); background:rgba(255,255,255,.85);
+      padding:2px 6px; border-radius:4px; }
+    .preview img { max-width:100%; max-height:480px; display:block; }
+    .preview .placeholder { color:var(--muted); font-size:13px;
+      padding:24px; text-align:center; }
+
+    .actions { margin-top:18px; display:flex; gap:8px; align-items:center; }
+    .actions button { min-width:96px; }
+
+    /* 日志折叠区 */
+    .log-toggle { display:flex; align-items:center; gap:6px; cursor:pointer;
+      color:var(--muted); font-size:12px; padding:6px 0; user-select:none; }
+    .log-toggle:hover { color:var(--primary); }
+    .log-toggle .chev { transition:transform .2s; display:inline-block; }
+    .log-toggle.open .chev { transform:rotate(90deg); }
+    .log-body { display:none; }
+    .log-body.open { display:block; }
+    .log-body .log { background:#0d0e10; color:#d0d0d4; padding:10px;
+      border-radius:6px; height:200px; overflow-y:auto; margin-top:6px;
+      font-family:ui-monospace,Consolas,monospace; font-size:11px;
+      line-height:1.45; white-space:pre-wrap; }
+
+    .danger { background:var(--danger) !important; }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <a href="/" class="icon-btn" aria-label="返回">←</a>
+    <h1 id="title">翻译任务</h1>
+    <a id="open-settings" href="/settings.html?from=home" class="icon-btn" aria-label="设置">⚙</a>
+  </header>
+  <main class="app-main" style="max-width:1100px;">
+    <section class="card">
+      <div class="stage-bar">
+        <span id="status-pill" class="pill idle">空闲</span>
+        <span id="progress-text" class="meta">等待启动…</span>
+      </div>
+      <div class="progress-track"><div id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-text">
+        <span id="batch-meta">单文件夹翻译</span>
+        <span id="counter">0 / 0</span>
+      </div>
+
+      <div class="preview">
+        <div class="frame">
+          <span class="lbl">原图</span>
+          <div id="orig-empty" class="placeholder"></div>
+          <img id="orig" alt="" style="display:none" />
+        </div>
+        <div class="frame">
+          <span class="lbl">译图</span>
+          <div id="trans-empty" class="placeholder"></div>
+          <img id="trans" alt="" style="display:none" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="start" class="primary">开始翻译</button>
+        <button id="cancel" class="primary danger" disabled>取消</button>
+        <span id="result" class="muted" style="margin-left:8px;"></span>
+      </div>
+    </section>
+
+    <details id="log-section" style="margin-top:14px;">
+      <summary class="log-toggle" id="log-toggle">
+        <span class="chev">▸</span>
+        <span>日志</span>
+      </summary>
+      <div class="log-body" id="log-body">
+        <div id="log" class="log"></div>
+      </div>
+    </details>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/task.js"></script>
+</body>
+</html>

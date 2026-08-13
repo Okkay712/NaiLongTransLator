@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>奶龙翻译器 · 安装翻译引擎</title>
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <style>
+    .log {
+      background: #0d0e10; color: #d0d0d4; padding: 12px; border-radius: 8px;
+      height: 360px; overflow-y: auto;
+      font-family: ui-monospace, Consolas, monospace; font-size: 12px; line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .actions { margin-top: 14px; }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <h1>首次安装翻译引擎</h1>
+    <a href="/" class="icon-btn" aria-label="返回">←</a>
+  </header>
+  <main class="app-main" style="max-width: 880px;">
+    <section class="card">
+      <p class="muted">需要拉取漫画翻译引擎和模型，可能要几分钟。请保持窗口打开。</p>
+      <div id="log" class="log"></div>
+      <div class="actions">
+        <button id="back-home" class="primary" disabled>安装完成后返回主页</button>
+      </div>
+    </section>
+  </main>
+  <script src="js/api.js"></script>
+  <script src="js/install.js"></script>
+</body>
+</html>

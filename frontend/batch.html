@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>奶龙翻译器 · 批量翻译队列</title>
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <style>
+    .queue-card { padding: 14px 18px; }
+    .task-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px; border: 1px solid var(--border);
+      border-radius: 6px; margin-bottom: 6px; background: var(--bg);
+      font-size: 13px;
+    }
+    .task-row .label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .status-pill {
+      display: inline-block; padding: 2px 8px; border-radius: 12px;
+      font-size: 11px; background: var(--border); margin-left: 6px;
+    }
+    .status-running { background: var(--primary); color: var(--primary-fg); }
+    .status-starting { background: var(--primary); color: var(--primary-fg); }
+    .status-queued  { background: var(--border); color: var(--muted); }
+    .status-done    { background: #44a16a; color: #fff; }
+    .status-failed  { background: var(--danger); color: #fff; }
+    .status-cancelled, .status-cancelling { background: #888; color: #fff; }
+    .task-actions { display: flex; gap: 6px; }
+    .task-actions a, .task-actions button {
+      font-size: 12px; padding: 4px 10px; border-radius: 4px;
+      border: 1px solid var(--border); background: transparent; cursor: pointer; color: var(--text); text-decoration: none;
+    }
+    .task-actions a:hover { background: var(--border); }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <a href="/" class="icon-btn" aria-label="返回">←</a>
+    <h1>批量翻译队列</h1>
+    <a id="open-settings" href="/settings.html?from=batch" class="icon-btn" aria-label="设置">⚙</a>
+  </header>
+  <main class="app-main" style="max-width: 880px;">
+    <section class="card queue-card">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h2 style="margin: 0;">当前队列</h2>
+        <div>
+          <span id="summary" class="muted"></span>
+        </div>
+      </div>
+      <div id="queue-list" style="margin-top: 14px;"></div>
+    </section>
+  </main>
+  <script src="js/api.js"></script>
+  <script src="js/batch.js"></script>
+</body>
+</html>
