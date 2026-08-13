@@ -6,6 +6,10 @@
 
 > 还保留旧版 Tkinter 极简 GUI（`app.py`，配合 `拖文件夹到这里翻译.bat` 可拖拽文件夹/zip 使用）。
 
+<p align="center">
+  <img src="./奶龙.jpg" width="800" />
+</p>
+
 ---
 
 ## 功能特性
