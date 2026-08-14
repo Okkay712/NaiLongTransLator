@@ -1,8 +1,0 @@
-python-dotenv
-langcodes
-py3langid
-opencv-python-headless
-Pillow
-numpy
-requests
-manga-ocr

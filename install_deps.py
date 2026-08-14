@@ -9,7 +9,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 VENV = ROOT / ".venv"
 PY = VENV / "Scripts" / "python.exe"
-REQ = ROOT / "requirements.txt"
 RUNTIME_REQ = ROOT / "requirements.runtime.txt"
 ENGINE = ROOT / "engine"
 ENGINE_URL = "https://github.com/zyddnys/manga-image-translator/archive/refs/heads/main.zip"
@@ -45,8 +44,7 @@ def main():
         print("=" * 60)
         subprocess.check_call([str(PY), "-m", "pip", "install", "--no-cache-dir", "-r", str(RUNTIME_REQ)], cwd=ROOT, env=env)
 
-    # 保留兼容：原 engine 入口依赖
-    subprocess.check_call([str(PY), "-m", "pip", "install", "--ignore-requires-python", "-r", str(REQ)], cwd=ROOT, env=env)
+    # 引擎依赖（从引擎源码 requirements.txt 过滤生成 requirements.engine.filtered.txt）
     source_req = src_dir / "requirements.txt"
     if source_req.exists():
         filtered_req = ROOT / "requirements.engine.filtered.txt"
