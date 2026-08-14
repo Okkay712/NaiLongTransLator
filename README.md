@@ -40,7 +40,7 @@ py -3 install_deps.py
 
 ### 方式 B：一键脚本
 
-双击 `安装依赖.bat` 完成环境准备（等价于上面的 `install_deps.py`），之后双击 `启动翻译器.bat` 启动，也可使用`奶龙翻译器.exe`启动。
+双击 `安装依赖.bat` 完成环境准备（等价于上面的 `install_deps.py`），之后双击 `启动翻译器.bat` 启动；也可直接用打包好的 `奶龙翻译器.exe`（本地打包产物，不在 git 仓库中，见方式 C）。
 
 ### 方式 C：打包产物（分发用）
 
@@ -135,12 +135,16 @@ py -3 install_deps.py
 │   ├── install.html   # 引擎安装页
 │   ├── css/           # 主题与通用样式
 │   └── js/            # 各页面逻辑
-├── tests/         # pytest（config / service / api / installer）
-├── run.py         # 启动入口（uvicorn + PyWebView，带 splash 启动画面）
+├── app.py             # 旧版 Tkinter CLI（配合 拖文件夹到这里翻译.bat 拖拽文件夹/zip 使用）
+├── config.json        # 旧版 CLI 配置（含 zip_result，与新 Web 界面互不影响）
+├── tests/             # pytest（config / service / api / installer / service_v2）
+├── run.py             # 启动入口（uvicorn + PyWebView，带 splash 启动画面）
 ├── install_deps.py    # 引擎 + 依赖一键安装（等价于 安装依赖.bat）
+├── requirements.runtime.txt          # Web 界面运行依赖（FastAPI / PyWebView）
+├── requirements.engine.filtered.txt  # 引擎依赖清单（install_deps.py 生成，剔除 pydensecrf）
+├── pydensecrf/        # vendored 依赖（densecrf，Windows 上 pip 装不了，引擎需要）
 ├── dev.spec           # PyInstaller 单目录 spec
-├── dev_onefile.spec   # PyInstaller 单文件 spec（推荐分发）
-└── requirements.runtime.txt
+└── dev_onefile.spec   # PyInstaller 单文件 spec（推荐分发）
 ```
 
 跑测试：
